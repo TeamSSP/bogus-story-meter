@@ -1,2 +1,0 @@
-access key id = AKIAI3CXNJGLZSFQDJPA
-secret access key = 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
