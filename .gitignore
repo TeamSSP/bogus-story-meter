@@ -8,8 +8,10 @@ dist/
 .env
 package-lock.json
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 keys.txt
+settings.config
