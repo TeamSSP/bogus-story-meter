@@ -7,6 +7,7 @@ dist/
 .DS_Store
 .env
 package-lock.json
+<<<<<<< HEAD
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
