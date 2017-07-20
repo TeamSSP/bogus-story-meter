@@ -1,11 +1,11 @@
 angular.module('app', [])
 
-  .controller('AppCtrl', function($http) {
+  .controller('AppCtrl', function($scope, $http) {
 
     var that = this;
 
     this.tabUrl = '';
-    this.loggedIn = true;
+    this.loggedIn = false;
     this.rating = 90 // on init - get page rating from DB
     this.rated = true;
 
@@ -23,6 +23,53 @@ angular.module('app', [])
     //   chrome.browserAction.setBadgeText({text: `${this.rating}%`});
     // }
 
+    // chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+    // // Use the token.
+    //   console.log('token: ', token, new Date());
+    //   if (token) {
+    //     this.loggedIn = true;
+    //     $scope.$apply();
+    //   }
+    // }.bind(this));  
+
+    chrome.identity.getProfileUserInfo(function(userInfo) {
+      if (userInfo.email.length) {
+        chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+          console.log('this: ', this);
+        // Use the token.
+          console.log('token: ', token, new Date());
+          if (token) {
+            this.loggedIn = true;
+            $scope.$apply();
+          }
+        }.bind(this));
+      } 
+    });
+
+
+
+    this.logIn = function() {
+      console.log('button pressed');
+
+      chrome.identity.getProfileUserInfo(function(userInfo) {
+
+        console.log('this is the email: ', userInfo.email);
+        console.log('userInfo: ', userInfo);
+
+        if (!userInfo.email.length) {
+          //alert('You need to sign into Chrome');         
+        } else {
+          chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+          // Use the token.
+          console.log('token: ', token, new Date());
+            if (token) {
+              this.loggedIn = true;
+              $scope.$apply();
+            }
+          }.bind(this));           
+        }
+      });
+    }
 
     this.get_current_url = function(callback) {
       chrome.tabs.query({ active: true }, function(tabs) {
@@ -65,9 +112,7 @@ angular.module('app', [])
       console.log(this.tabUrl)
     }
   })
+
   .component('app', {
-
-    templateUrl: '../templates/app.html',
-    controller: 'AppCtrl'
-
+    templateUrl: '../templates/app.html'
   });
