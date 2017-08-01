@@ -11,7 +11,6 @@ handler.getUrlData = (req, res) => {
   let fullname = req.query.currentName;
   db.User.findCreateFind( {where: {'username': username, 'profilepicture': profilepicture, 'fullname': fullname}} )
   .spread((userEntry) => {
-    if (userEntry !== null) {
     return db.Url.findOne( {where: {url: url}} )
     .then((urlEntry) => {
       if (urlEntry === null) {
@@ -43,7 +42,6 @@ handler.getUrlData = (req, res) => {
         });
       }
     });
-  }
   });
 };
 
@@ -80,9 +78,7 @@ handler.getUrlStats = (req, res) => {
     return db.User.findOne({where: {username: urlData.username}});
   })
   .then(user => {
-    if (user !== null) {
     return db.UrlVote.findOne({where: {userId: user.id, urlId: urlId}});
-  }
   })
   .then(vote => {
     vote ? urlData.vote = vote.type : urlData.vote = null;
@@ -110,7 +106,7 @@ handler.getUserActivity = (req, res) => {
       return db.Comment.findAll( {'where': {'userId': userEntry.id}} )
       .then((userComments) => {
 
-        let userVotesPromises = userVotes.map((row) => {
+        var userVotesPromises = userVotes.map((row) => {
           return db.Url.findOne( {'where': {'id': row.urlId}} )
           .then((urlEntry) => {
             row.dataValues.url = urlEntry.url;
@@ -119,7 +115,7 @@ handler.getUserActivity = (req, res) => {
           });
         });
 
-        let userCommentsPromises = userComments.map((row) => {
+        var userCommentsPromises = userComments.map((row) => {
           return db.Url.findOne( {'where': {'id': row.urlId}} )
           .then((urlEntry) => {
             row.dataValues.url = urlEntry.url;

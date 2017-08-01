@@ -1,17 +1,17 @@
-let Sequelize = require('sequelize');
-let connectionUrl = require('./db-config.js').RDS_CONNECTION_URL;
+var Sequelize = require('sequelize');
+var connectionUrl = require('./db-config.js').RDS_CONNECTION_URL;
 
-let db = new Sequelize('bsm', 'root', '', {
+var db = new Sequelize('bsm', 'root', '', {
   dialect: 'mysql',
   logging: false
 });
 
-// let db = new Sequelize(connectionUrl, {
+// var db = new Sequelize(connectionUrl, {
 //   dialect: 'mysql',
 //   logging: false
 // });
 
-let User = db.define('User', {
+var User = db.define('User', {
   username: {
     type: Sequelize.STRING,
     unique: true
@@ -54,7 +54,7 @@ let User = db.define('User', {
   }
 });
 
-let Category = db.define('Category', {
+var Category = db.define('Category', {
   name: {
     type: Sequelize.STRING,
     unique: true
@@ -70,7 +70,7 @@ let Category = db.define('Category', {
   }
 });
 
-let Url = db.define('Url', {
+var Url = db.define('Url', {
   url: {
     type: Sequelize.STRING,
     unique: true
@@ -98,7 +98,7 @@ let Url = db.define('Url', {
   }
 });
 
-let Comment = db.define('Comment', {
+var Comment = db.define('Comment', {
   text: Sequelize.TEXT('medium'),
   commentId: Sequelize.INTEGER,
   urlId: Sequelize.INTEGER,
@@ -115,7 +115,7 @@ let Comment = db.define('Comment', {
   }
 });
 
-let CommentVote = db.define('CommentVote', {
+var CommentVote = db.define('CommentVote', {
   type: Sequelize.STRING,
   commentId: {type: Sequelize.INTEGER, unique: 'userCommentId'},
   userId: {type: Sequelize.INTEGER, unique: 'userCommentId'}
@@ -129,7 +129,7 @@ let CommentVote = db.define('CommentVote', {
 });
 
 //todo: make sure unique composite works
-let UrlVote = db.define('UrlVote', {
+var UrlVote = db.define('UrlVote', {
   type: Sequelize.STRING,
   userId: {type: Sequelize.INTEGER, unique: 'userUrlId'},
   urlId: {type: Sequelize.INTEGER, unique: 'userUrlId'}

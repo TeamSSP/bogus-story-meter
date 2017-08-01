@@ -1,6 +1,6 @@
 angular.module('app') /*eslint-disable indent*/
 .controller('commentCtrl', function() {
-  this.toggleReplying = () => {
+  this.toggleReplying = function() {
     this.comment.replying = !this.comment.replying;
   };
 })

@@ -1,5 +1,5 @@
 body {
-  margin-top: 50px;
+  margin-top: 80px;
 }
 
 li, .table{
@@ -25,7 +25,7 @@ p, .stats-text, .comment-text {
 }
 
 .top-offset {
-	padding-top: 20px;
+	margin-top: 30px;
 }
 
 .sign-in {
@@ -54,7 +54,6 @@ p, .stats-text, .comment-text {
 	height: 180px;
 	object-fit: cover;
 	margin: auto;
-  border-radius: 7%;  
 }
 
 .username {
@@ -134,11 +133,11 @@ p, .stats-text, .comment-text {
   margin-top: 10px;
 }
 
-.upvote, .truthy, .true {
+.upvote, .truthy {
   color: green;
 }
 
-.downvote, .falsy, .false {
+.downvote, .falsy {
   color: red;
 }
 

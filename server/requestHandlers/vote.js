@@ -11,7 +11,7 @@ router.post('/', (req, res, next) => {
   let username = req.body.username || req.session.username;
   let typeCount = `${type}Count`;
   let title = req.body.title;
-  let categories = req.body.categories;
+  let categories = req.body.categories
 
   if (urlId !== null) {
     db.Url.findOne({where: {id: urlId}})
@@ -67,11 +67,11 @@ router.put('/', (req, res, next) => {
   let type = req.body.type;
   let username = req.body.username || req.session.username;
   let typeCount = `${type}Count`;
-  db.Url.findOne({where: {id: urlId}})
+  db.Url.findOne({'where': {'id': urlId}})
   .then(urlEntry => {
-    return db.User.findOne({where: {username: username}})
+    return db.User.findOne({'where': {'username': username}})
     .then(userEntry => {
-      return db.UrlVote.findOne({where: {userId: userEntry.id, urlId: urlEntry.id}})
+      return db.UrlVote.findOne({'where': {'userId': userEntry.id, 'urlId': urlEntry.id}})
       .then(voteEntry => {
         let oldTypeCount = `${voteEntry.type}Count`;
         let oldType = voteEntry.type;
@@ -98,6 +98,27 @@ router.get('/:urlId', (req, res, next) => {
   .catch(err => {
     console.error('error getting URL votes: ', err);
     res.sendStatus(500);
+  });
+});
+
+router.delete('/', (req, res, next) => {
+  let urlId = req.query.urlId;
+  let type = req.query.type;
+  let username = req.query.username;
+  let typeCount = `${type}Count`;
+
+  db.Url.findOne({'where': {'id': urlId}})
+  .then(urlEntry => {
+    return db.User.findOne({'where': {'username': username}})
+    .then(userEntry => {
+      return db.UrlVote.findOne({'where': {'userId': userEntry.id, 'urlId': urlEntry.id}})
+      .then(voteEntry => {
+        userEntry.decrement(typeCount);
+        urlEntry.decrement(typeCount);
+        voteEntry.destroy();
+        res.status(201).json(urlEntry.id);
+      });
+    });
   });
 });
 
