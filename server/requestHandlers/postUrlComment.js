@@ -9,6 +9,8 @@ router.post('/', (req, res, next) => {
   let username = req.body.username || req.session.username;
   let comment = req.body.comment;
   let commentId = req.body.commentId || null;
+  let title = req.body.title;
+  let categories = req.body.categories;
   if (urlId !== null) {
     db.User.findCreateFind({where: {username: username}})
     .spread((user) => {
@@ -21,7 +23,7 @@ router.post('/', (req, res, next) => {
       res.sendStatus(400);
     });
   } else if (urlId === null) {
-    db.Url.findCreateFind({where: {'url': url}})
+    db.Url.findCreateFind({where: {'url': url, 'title': title}})
     .spread(url => {
       return db.User.findCreateFind({where: {username: username}})
       .spread((user) => {

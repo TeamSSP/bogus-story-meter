@@ -30,18 +30,28 @@ angular.module('app') /*eslint-disable indent*/
     .then(res => callback(res.data))
     .catch(err => console.error(errMsg, err));
   };
-
-  this.getGoogleProfile = (token, data = {}, params = {}, errMsg, callback) => {
+  this.delete = (endpoint, params, errMsg, callback) => {
     $http({
-      method: 'GET',
-      url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + token
-    }).then(function(userData) {
-      console.log('userData', userData);
-    }, function() {
-      console.log(errMsg);
-    });
+      method: 'DELETE',
+      url: window.serverUri + endpoint,
+      params: params
+    })
+    .then(res => callback(res.data))
+    .catch(err => console.error(errMsg, err));
   };
 
+  // this.getGoogleProfile = (token, data = {}, params = {}, errMsg, callback) => {
+  //   $http({
+  //     method: 'GET',
+  //     url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + token
+  //   }).then(function(userData) {
+  //     console.log('userData', userData);
+  //   }, function() {
+  //     console.log(errMsg);
+  //   });
+  // };
+
+// WATSON CALL
   this.getCategory = (url, errMsg, callback) => {
     $http({
       method: 'GET',
@@ -49,7 +59,7 @@ angular.module('app') /*eslint-disable indent*/
       params: {
         'url': url,
         'features': 'categories,metadata',
-        'return_analyzed_text': false,
+        'return_analyzed_text': true,
         'clean': true,
         'fallback_to_raw': true,
         'concepts.limit': 8,
@@ -70,4 +80,5 @@ angular.module('app') /*eslint-disable indent*/
     .then(res => callback(res.data))
     .catch(err => console.error(errMsg, err));
   };
+
 });

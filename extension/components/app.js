@@ -2,7 +2,7 @@ angular.module('app', [])
 
   .controller('AppCtrl', function($scope, request) {
 
-    let that = this;
+    var that = this;
 
     this.rating = null;
     this.urlId = null;
@@ -13,13 +13,19 @@ angular.module('app', [])
     this.profilePicture = null;
     this.categories = null;
     this.title = null;
+    this.upvotebtn = '';
+    this.downvotebtn = '';
+    if (this.uservote) {
+      this[this.uservote+'btn'] = 'pressed';
+    }
 
-    chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
+    console.log(this.upvotebtn)
+    // chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
     // Use the token.
-      console.log('new token: ', token, new Date());
-      if (token) {
+      // console.log('new token: ', token, new Date());
+      // if (token) {
         // this.loggedIn = true;
-        $scope.$apply();
+        // $scope.$apply();
 
         // let errMsg = 'could not get profile information';
 
@@ -28,27 +34,32 @@ angular.module('app', [])
         //   this.fullName = profileInfo.data.name;
         //   this.profilePicture = profileInfo.data.picture;
         // });
-      }
-    });
+    //   }
+    // }.bind(this));
 
     chrome.runtime.sendMessage({msg: 'Give me data on this tab'});
 
-    chrome.extension.onMessage.addListener((urlObj) => {
-      console.log('from background ', urlObj);
+    chrome.extension.onMessage.addListener(function(urlObj) {
+      console.log('from background ', urlObj)
       that.rating = urlObj.rating;
       that.urlId = urlObj.urlId;
       that.url = urlObj.tabUrl;
       that.currentUser = urlObj.username;
       that.uservote = urlObj.uservote;
+      if (that.uservote) {
+        that[that.uservote+'btn'] = 'pressed';
+      }
+          console.log(that.upvotebtn)
+
       that.name = urlObj.name;
       that.profilePicture = urlObj.profilepicture;
 
+      //WATSON CALL
       // request.getCategory(that.url, 'could not retrieve data from Watson', (getCategoryRes) => {
-      //   console.log(getCategoryRes);
       //   that.title = getCategoryRes.metadata.title;
       //   that.categories = getCategoryRes.categories;
-      //   console.log(that.categories);
-      // });
+      //   console.log(getCategoryRes)
+      // })
 
       if (that.rating === 0) {
         that.rated = true;
@@ -57,8 +68,6 @@ angular.module('app', [])
       }
       $scope.$apply();
     });
-
-
 
     this.handleProfile = () => {
       chrome.tabs.create({url: `${window.serverUri}/profile` });
@@ -69,7 +78,7 @@ angular.module('app', [])
       if (this.url === null) {
         return;
       }
-      let data = {
+      var data = {
         urlId: this.urlId,
         url: this.url,
         username: this.currentUser,
@@ -79,7 +88,7 @@ angular.module('app', [])
       };
       let errMsg = 'Could not submit vote: ';
 
-      console.log('inside handlevote - data ', data);
+      console.log('inside handlevote - data ', data)
 
       // if user hasnt voted before, new vote:
       if (this.uservote === null) {
@@ -88,6 +97,7 @@ angular.module('app', [])
           request.get(`/urlvote/${that.urlId}`, null, null, errMsg, (getResponse) => {
             that.rating = getResponse;
             that.uservote = vote;
+            that[vote+'btn'] = 'pressed';
             chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'urlId': that.urlId});
           });
         });
@@ -95,26 +105,37 @@ angular.module('app', [])
         request.put('/urlvote', data, errMsg, (postResponse) => {
           that.urlId = postResponse;
           request.get(`/urlvote/${that.urlId}`, null, null, errMsg, (getResponse) => {
+            that[that.uservote+'btn'] = '';
+            that[vote+'btn'] = 'pressed';
             that.rating = getResponse;
             that.uservote = vote;
             chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'urlId': that.urlId});
           });
         });
-
-      } else if (this.uservote === vote) {
-        return; // don't let user send same rating twice for same URL
+      } else if (this.uservote === vote) { // cancel vote
+        request.delete('/urlvote', data, errMsg, (deleteResponse) => {
+          that.urlId = deleteResponse;
+          request.get(`/urlvote/${that.urlId}`, null, null, errMsg, (getResponse) => {
+            that.rating = getResponse;
+            that.uservote = null;
+            that[vote+'btn'] = '';
+            chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'urlId': that.urlId});
+          });
+        });
       }
     };
 
-    this.handleSubmitComment = (comment) => {
+    this.handleSubmitComment = function(comment) {
       if (this.url === null) {
         return;
       }
-      let data = {
+      var data = {
         url: this.url,
         urlId: this.urlId,
         username: this.currentUser,
-        comment: comment
+        comment: comment,
+        title: this.title,
+        categories: this.categories
       };
       request.post('/urlcomment', data, 'Could not submit comment: ', (resData) => {
         if(resData) {
@@ -128,6 +149,7 @@ angular.module('app', [])
 
     this.handleStatsLink = () => {
       let currentUrl = this.url;
+      console.log('------currentUrl:', currentUrl);
       let params = {
         currentUrl
       };
