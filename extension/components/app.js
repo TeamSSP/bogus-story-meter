@@ -99,6 +99,8 @@ angular.module('app', [])
         return;
       }
 
+      console.log('urlId in handleSubmitComment:', this.urlId, 'comment:', comment);
+
       let data = {
         url: this.url,
         urlId: this.urlId,

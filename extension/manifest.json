@@ -1,6 +1,6 @@
 {
   "name": "Bogus Story Meter",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "manifest_version": 2,
   "description": "For people who want the truth and nothing but the truth.",
   "icons": { "128": "images/BSMIcon.png" },

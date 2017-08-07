@@ -36,6 +36,7 @@ router.post('/', (req, res, next) => {
   let username = req.body.username || req.session.username;
   let comment = req.body.comment;
   let commentId = req.body.commentId || null;
+  console.log('urlId:', urlId, 'comment:', comment);  
   if (urlId !== null) {
     db.User
       .findCreateFind({where: {username: username}})

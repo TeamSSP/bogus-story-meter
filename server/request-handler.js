@@ -150,7 +150,9 @@ handler.getUserActivity = (req, res) => {
             });
 
             let userCommentsPromises = userComments.map(row => {
+              //console.log('row.urlId', row.urlId);
               return db.Url.findOne({where: {id: row.urlId}}).then(urlEntry => {
+                //console.log('commentspromises urlEntry', urlEntry);
                 row.dataValues.url = urlEntry.url;
                 row.dataValues.title = urlEntry.title;
                 return row;
