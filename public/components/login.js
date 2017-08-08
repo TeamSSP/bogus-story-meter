@@ -27,7 +27,7 @@ angular.module('app')
     vpw = this.accVerifyPw;
     if (pw === vpw) {
       this.requestActive = true;
-      $http.post('http://localhost:8080/auth/signup', {
+      $http.post('http://ec2-52-36-33-73.us-west-2.compute.amazonaws.com/auth/signup', {
         username: un,
         password: pw
       }).then((response) => {
@@ -76,7 +76,7 @@ angular.module('app')
   this.login = () => {
     un = this.loginName;
     pw = this.loginPw;
-    $http.post('http://localhost:8080/auth/login', {
+    $http.post('http://ec2-52-36-33-73.us-west-2.compute.amazonaws.com/auth/login', {
         username: un,
         password: pw
       }).then((response) => {
