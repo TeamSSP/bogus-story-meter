@@ -48,7 +48,7 @@ router.post('/', (req, res, next) => {
         });
       })
       .then(comment => {
-        res.sendStatus(201);
+        res.status(201).json(url.id);
       })
       .catch(err => {
         res.sendStatus(400);

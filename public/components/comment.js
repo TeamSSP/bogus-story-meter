@@ -40,9 +40,7 @@ angular.module('app') /*eslint-disable indent*/
     comment: '<',
     comments: '<',
     postComment: '<',
-    toggleReplying: '<',
     replyText: '<',
-    handleCommentVote: '<',
     checkAuth: '<',
     authenticated: '<',
     showAlert: '<'
