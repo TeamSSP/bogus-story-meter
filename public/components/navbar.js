@@ -22,7 +22,7 @@ angular.module('app')
   };
 
   this.logout = () => {
-    $http.get('http://localhost:8080/auth/logout')
+    $http.get('http://ec2-52-36-33-73.us-west-2.compute.amazonaws.com/auth/logout')
     .then(function(success) {
       $window.location.href = '/login';
     }, function(err) {

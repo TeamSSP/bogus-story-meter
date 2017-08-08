@@ -1,5 +1,5 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt-nodejs");
 const nodemailer = require("nodemailer");
 const uuidv4 = require("uuid/v4");
 
@@ -43,7 +43,7 @@ router.post("/signup", (req, res, next) => {
           return;
         }
         bcrypt.genSalt(saltRounds, (err, salt) => {
-          bcrypt.hash(password, salt, (err, hash) => {
+          bcrypt.hash(password, salt, null, (err, hash) => {
             if (err) {
               console.error(err);
             } else {

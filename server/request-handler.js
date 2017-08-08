@@ -68,7 +68,7 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
     })
     .spread(url => {
       let stpUrl =
-        'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
+        'http://ec2-52-36-33-73.us-west-2.compute.amazonaws.com' + '/stats/redirect/' + url.id.toString();
       console.log('new stat page URL created, transmitting: ', stpUrl);
       res.status(200).json(stpUrl);
     })
